@@ -11,9 +11,9 @@ def retriever(item_ids, start, scraper):
     '''
     Function meant as an asynchronous getter for the RSBuddy
     API JSON data. It needs a list of item ids which it will
-    fetch, the timestamp (in milliseconds) to where it will
-    retrieve the data and the scraper instance which it will
-    call.
+    fetch, a timestamp (in milliseconds) in the past,
+    indicating a timespan from now until the timestamp, and
+    the scraper instance which it will call.
     '''
     for identifier in item_ids:
         url = f'https://api.rsbuddy.com/grandExchange?a=graph&g=30&start={start}&i={identifier}'
