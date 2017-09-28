@@ -5,31 +5,31 @@ JSON files.
 '''
 import cfscrape
 from fs_utils import write_file
+import json
 import numpy as np
-from retriever import Retriever
-from scraper_utils import scrape
+from retriever import retriever
+from scraper_utils import cached
+from threading import Thread
 
 def main():
     scraper = cfscrape.create_scraper()
-    items = scrape(scraper, 'https://rsbuddy.com/exchange/names.json')
+    items = cached(scraper, '.data/items.json', 'https://rsbuddy.com/exchange/names.json')
 
     # Write caching file to .data folder
-    write_file('.data/items.json', items)
+    write_file('.data/items.json', json.dumps(items))
 
     # Divide the items into buckets for the retrievers to
     # process
-    bucket_size = 4
+    threads = 4
     start = 1420070400000
-    item_id_buckets = np.array_split(list(items.keys())[:20], bucket_size)
+    item_ids = list(items.keys())
+    item_id_buckets = np.array_split(item_ids, threads)
 
     # Create all retrievers and run them as a seperate
     # thread
     for item_id_bucket in item_id_buckets:
-        retriever = Retriever(item_id_bucket, start, scraper)
-        retriever.start()
-        # Kill threads when they take more than 15 minutes,
-        # adjust accordingly
-        retriever.join(timeout=9000)
+        thread = Thread(target=retriever, args=(item_id_bucket, start, scraper))
+        thread.start()
 
 if __name__ == "__main__":
     main()
