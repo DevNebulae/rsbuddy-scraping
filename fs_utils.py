@@ -3,7 +3,12 @@ General purpose utility module which is useful for working
 with the file system.
 '''
 
+import json
 import os
+
+def read_json(path):
+    with open(path) as _file:
+        return json.load(_file)
 
 def touch(path):
     '''
@@ -23,10 +28,10 @@ def touch_dir(path):
         os.makedirs(base_directory)
 
 def write_file(path, content):
-	'''
-	Write a string to a file and create the file if it does
-	not exist.
-	'''
+    '''
+    Write a string to a file and create the file if it does
+    not exist.
+    '''
     touch_dir(path)
     touch(path)
 
