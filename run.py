@@ -23,7 +23,7 @@ def main():
 
     logger.addHandler(file_handler)
 
-    logger.info('Started downloading items.')
+    logger.debug('Started downloading items.')
 
     scraper = cfscrape.create_scraper()
     items = cached(scraper, '.data/items.json', 'https://rsbuddy.com/exchange/names.json')
@@ -45,7 +45,7 @@ def main():
     shuffle(item_ids)
     item_id_buckets = np.array_split(item_ids, thread_amount)
 
-    logger.info('Start downloading item history')
+    logger.debug('Started downloading item history.')
 
     # Create all retrievers and run them as a seperate
     # thread
@@ -56,6 +56,8 @@ def main():
 
     for thread in threads:
         thread.join()
+
+    logger.debug('Scraper finished.')
 
 if __name__ == "__main__":
     main()

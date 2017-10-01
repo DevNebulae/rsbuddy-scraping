@@ -44,7 +44,7 @@ class Retriever(Thread):
         # A JSONDecodeError is a child of ValueError
         # TODO: Add JSONDecodeError for clarity
         except ValueError:
-            self.logger.info(f'Attempt to retrieve item id {item_id} failed. Retrying.')
+            self.logger.warn(f'Attempt to retrieve item id {item_id} failed. Retrying.')
 
             # When the downloading has not succeeded, try
             # again
