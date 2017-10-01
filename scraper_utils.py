@@ -11,11 +11,11 @@ def cached(scraper, path, url):
         with open(path, 'r') as _file:
             return json.load(_file)
     else:
-        return scrape(scraper, url)
+        return json.loads(scrape(scraper, url))
 
 def scrape(scraper, url):
     '''
     Utility function which retrieves data from the specified
     url and decodes it in the latin-1 format.
     '''
-    return json.loads(scraper.get(url).content.decode('latin1'))
+    return scraper.get(url).content.decode('latin1')
