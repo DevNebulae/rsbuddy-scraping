@@ -12,8 +12,18 @@ from fs_utils import touch_dir, write_file
 import numpy as np
 from retriever import Retriever
 from scraper_utils import cached
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('--threads', help='Increase the amount of threads which will retrieve the data. Be warned that this will also increase the amount of bandwidth the script needs.')
+parser.add_argument('--start', help='Define the start of the financial transactions.')
+parser.add_argument('--retries', help='Define the maximum amount of times the script will try to download the data.')
 
 def main():
+
+    args = parser.parse_args()
+
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
 
@@ -36,9 +46,9 @@ def main():
     # Divide the items into buckets for the retrievers to
     # process
     # TODO: Add command line options for these variables
-    thread_amount = 4
-    timestamp = 1420070400000
-    max_retries = 5
+    thread_amount = int(args.threads) or 2
+    timestamp = int(args.start) or 1420070400000
+    max_retries = int(args.retries) or 5
 
     threads = []
     item_ids = list(items.keys())[:100]
