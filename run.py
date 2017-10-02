@@ -46,9 +46,9 @@ def main():
     # Divide the items into buckets for the retrievers to
     # process
     # TODO: Add command line options for these variables
-    thread_amount = int(args.threads) or 2
-    timestamp = int(args.start) or 1420070400000
-    max_retries = int(args.retries) or 5
+    thread_amount = int(args.threads) if args.threads else 2
+    timestamp = int(args.start) if args.start else 1420070400000
+    max_retries = int(args.retries) if args.retries else 5
 
     threads = []
     item_ids = list(items.keys())[:100]
