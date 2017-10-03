@@ -6,8 +6,8 @@ JSON data from the RSBuddy API.
 import json
 import time
 from threading import Thread
-from fs_utils import write_file
-from scraper_utils import scrape
+from fsutils.writing import write_file
+from scrapeutils.scrape import scrape
 
 class Retriever(Thread):
     def __init__(self, item_ids, timestamp, scraper, max_retries, logger):

@@ -10,7 +10,7 @@ import argparse
 import cfscrape
 from fsutils.writing import write_file
 import numpy as np
-from threaded.retriever import Retriever
+from retriever import Retriever
 from scrapeutils.cache import cached
 
 parser = argparse.ArgumentParser()
