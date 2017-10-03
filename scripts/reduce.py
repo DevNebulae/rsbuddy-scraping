@@ -1,22 +1,18 @@
 #!/usr/bin/python3
 import os
-from fs_utils import read_json
-from itertools import chain
+from fsutils.json import read_json
 from pprint import pprint
+from threaded.reducer import Reducer
 
 def main():
     if not os.path.exists('.data/items.json'):
         raise Exception('The items.json file in the .data folder does not exist. Please run the scraping script before executing this script.')
 
     lookup = read_json('.data/items.json')
-    items = {}
 
-    # TODO: Process in batches of a certain size
-    for key, values in list(lookup.items())[:100]:
-        filename = f'.data/{key}.json'
-        items[key] = {**values, 'transactions': read_json(filename)}
-
-    pprint(items)
+    reducer = Reducer(list(lookup.items())[:100])
+    reducer.start()
+    reducer.join()
 
 if __name__ == "__main__":
     main()

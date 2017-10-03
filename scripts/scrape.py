@@ -5,14 +5,13 @@ JSON files.
 '''
 import logging
 import json
-from threading import Thread
 from random import shuffle
-import cfscrape
-from fs_utils import touch_dir, write_file
-import numpy as np
-from retriever import Retriever
-from scraper_utils import cached
 import argparse
+import cfscrape
+from fsutils.writing import write_file
+import numpy as np
+from threaded.retriever import Retriever
+from scrapeutils.cache import cached
 
 parser = argparse.ArgumentParser()
 
@@ -21,7 +20,6 @@ parser.add_argument('--start', help='Define the start of the financial transacti
 parser.add_argument('--retries', help='Define the maximum amount of times the script will try to download the data.')
 
 def main():
-
     args = parser.parse_args()
 
     logger = logging.getLogger(__name__)
@@ -45,13 +43,12 @@ def main():
 
     # Divide the items into buckets for the retrievers to
     # process
-    # TODO: Add command line options for these variables
     thread_amount = int(args.threads) if args.threads else 2
     timestamp = int(args.start) if args.start else 1420070400000
     max_retries = int(args.retries) if args.retries else 5
 
     threads = []
-    item_ids = list(items.keys())[:100]
+    item_ids = list(items.keys())
     shuffle(item_ids)
     item_id_buckets = np.array_split(item_ids, thread_amount)
 
