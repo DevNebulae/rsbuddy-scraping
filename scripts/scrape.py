@@ -22,6 +22,11 @@ parser.add_argument('--retries', help='Define the maximum amount of times the sc
 def main():
     args = parser.parse_args()
 
+    # Define all command-line mutable arguments
+    thread_amount = int(args.threads) if args.threads else 2
+    timestamp = int(args.start) if args.start else 1420070400000
+    max_retries = int(args.retries) if args.retries else 5
+
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
 
@@ -43,11 +48,6 @@ def main():
 
     # Divide the items into buckets for the retrievers to
     # process
-    thread_amount = int(args.threads) if args.threads else 2
-    timestamp = int(args.start) if args.start else 1420070400000
-    max_retries = int(args.retries) if args.retries else 5
-
-    threads = []
     item_ids = list(items.keys())
     shuffle(item_ids)
     item_id_buckets = np.array_split(item_ids, thread_amount)
@@ -56,6 +56,7 @@ def main():
 
     # Create all retrievers and run them as a seperate
     # thread
+    threads = []
     for item_id_bucket in item_id_buckets:
         thread = Retriever(item_id_bucket, timestamp, scraper, max_retries, logger)
         thread.start()
