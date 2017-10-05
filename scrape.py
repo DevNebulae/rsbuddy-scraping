@@ -58,7 +58,7 @@ def main():
     # thread
     threads = []
     for item_id_bucket in item_id_buckets:
-        thread = Retriever(item_id_bucket, timestamp, scraper, max_retries, logger)
+        thread = Retriever(item_id_bucket, timestamp, cfscrape.create_scraper(), max_retries, logger)
         thread.start()
         threads.append(thread)
 

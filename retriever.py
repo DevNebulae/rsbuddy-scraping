@@ -30,25 +30,23 @@ class Retriever(Thread):
         # Time out the downloading for an exponential
         # increasing amount of seconds before trying to
         # download the data again
-        time.sleep(2 ** (self.max_retries - retries) - 1)
+        time.sleep(2 ** (self.max_retries - retries))
 
         url = f'https://api.rsbuddy.com/grandExchange?a=graph&g=30&start={self.timestamp}&i={item_id}'
-        response = scrape(self.scraper, url)
+        response = self.scraper.get(url)
 
-        try:
-            content = json.loads(response)
-            write_file(f'.data/{item_id}.json', json.dumps(content))
-
-            # Log when an item has been succesfully processed
-            self.logger.info(f'Successfully retrieved item id {item_id}\'s price history.')
-        # A JSONDecodeError is a child of ValueError
-        # TODO: Add JSONDecodeError for clarity
-        except ValueError:
+        if (response.status_code != 200):
             self.logger.warn(f'Attempt to retrieve item id {item_id} failed. Retrying.')
 
             # When the downloading has not succeeded, try
             # again
             self.retrieve(item_id, retries - 1)
+
+        content = json.loads(response.content)
+
+        write_file(f'.data/{item_id}.json', json.dumps(response.content.decode('latin1')))
+            # Log when an item has been succesfully processed
+        self.logger.info(f'Successfully retrieved item id {item_id}\'s price history.')
 
     def run(self):
         for item_id in self.item_ids:
